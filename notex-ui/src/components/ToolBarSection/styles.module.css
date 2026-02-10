@@ -1,0 +1,10 @@
+.toolbarSection {
+  padding: 8px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.generateSummaryButton {
+  background: linear-gradient(90deg, var(--ai-gradient-start) 0%, var(--ai-gradient-end) 100%);
+}

@@ -1,0 +1,18 @@
+:root {
+  --bg-app: #F9FAFB;
+  --bg-panel: #FFFFFF;
+
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+
+  --border-light: #E5E7EB;
+
+  --accent-primary: #2563EB;
+  --accent-secondary: #06B6D4;
+
+  --folder-active-bg: #93C5FD;
+  --note-selected-bg: #E0F2FE;
+
+  --ai-gradient-start: #3B82F6;
+  --ai-gradient-end: #06B6D4;
+}

@@ -1,33 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Grid } from '@mui/material'
 import './App.css'
+import ToolBarSection from './components/ToolBarSection/ToolBarSection'
+import FolderSection from './components/FolderSection/FolderSection'
+import NotesSection from './components/NotesSection/NotesSection'
+import NoteEditorSection from './components/NoteEditorSection/NoteEditorSection'
+import './styles/theme.css';
+import { useState } from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [showFolder, setShowFolder] = useState(true);
+  const [showNotes, setShowNotes] = useState(true);
+
+  // Calculate NoteEditorSection size
+  let noteEditorMd = 8;
+  if (!showFolder && !showNotes) noteEditorMd = 12;
+  else if (!showFolder || !showNotes) noteEditorMd = 9;
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Grid container>
+        <Grid size={{ xs: 12 }}>
+          <ToolBarSection
+            showFolder={showFolder}
+            showNotes={showNotes}
+            onCloseFolder={() => setShowFolder(false)}
+            onCloseNotes={() => setShowNotes(false)}
+          />
+        </Grid>
+        <Grid container size={{ xs: 12}}>
+          {showFolder && (
+            <Grid size={{ md: 2 }}>
+              <FolderSection />
+            </Grid>
+          )}
+          {showNotes && (
+            <Grid size={{ md: 2 }}>
+              <NotesSection />
+            </Grid>
+          )}
+          <Grid size={{ md: noteEditorMd }}>
+            <NoteEditorSection />
+          </Grid>
+        </Grid>
+      </Grid>
     </>
   )
 }
