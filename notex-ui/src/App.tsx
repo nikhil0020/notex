@@ -12,14 +12,14 @@ function App() {
   const [showNotes, setShowNotes] = useState(true);
 
   // Calculate NoteEditorSection size
-  let noteEditorMd = 8;
-  if (!showFolder && !showNotes) noteEditorMd = 12;
-  else if (!showFolder || !showNotes) noteEditorMd = 9;
+  let noteEditorMd = 12;
+  if (!showFolder && !showNotes) noteEditorMd = 18;
+  else if (!showFolder || !showNotes) noteEditorMd = 15;
 
   return (
     <>
-      <Grid container>
-        <Grid size={{ xs: 12 }}>
+      <Grid container columns={18}>
+        <Grid size={{ xs: 18 }}>
           <ToolBarSection
             showFolder={showFolder}
             showNotes={showNotes}
@@ -27,14 +27,14 @@ function App() {
             onCloseNotes={() => setShowNotes(false)}
           />
         </Grid>
-        <Grid container size={{ xs: 12}}>
+        <Grid container size={{ xs: 18}}>
           {showFolder && (
             <Grid size={{ md: 2 }}>
               <FolderSection />
             </Grid>
           )}
           {showNotes && (
-            <Grid size={{ md: 2 }}>
+            <Grid size={{ md: 3 }}>
               <NotesSection />
             </Grid>
           )}
