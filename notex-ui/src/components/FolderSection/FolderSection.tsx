@@ -6,9 +6,6 @@ type Props = {}
 const FolderSection = (props: Props) => {
   return (
     <Grid container>
-      <Grid size={12}>
-        
-      </Grid>
     </Grid>
   )
 }

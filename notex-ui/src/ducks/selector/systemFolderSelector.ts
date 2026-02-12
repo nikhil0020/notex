@@ -32,7 +32,7 @@ export const selectChildren = (parentId: string ) => (state: RootState) => {
 export const selectBlocksByNote = (noteId: string) => (state: RootState) => {
   const note = state.fileSystem.entities[noteId];
 
-  if (note.type === "note") {
-    return note.blockIds.map((id) => state.blocks.entities[id]);
-  }
+  if (!note || note.type !== "note") return [];
+  
+  return note.blockIds.map((id) => state.blocks.entities[id]);
 }
