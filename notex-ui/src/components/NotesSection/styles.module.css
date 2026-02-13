@@ -1,0 +1,19 @@
+.noteSection {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid rgb(127, 126, 126);
+  border-top: none;
+  border-left: none;
+  height: calc(100vh - 60px);
+  padding: 5px 10px;
+  background-color: rgb(247, 245, 247);
+}
+
+.noteCard {
+  border: 1px solid rgb(127, 126, 126);
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  background-color: wheat;
+}

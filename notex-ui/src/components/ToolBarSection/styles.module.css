@@ -3,6 +3,8 @@
   height: 50px;
   display: flex;
   align-items: center;
+  background-color: rgb(241, 237, 241);
+  border-bottom: 2px solid rgb(127, 126, 126);
 }
 
 .generateSummaryButton {

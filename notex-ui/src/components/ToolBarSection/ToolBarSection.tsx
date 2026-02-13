@@ -11,8 +11,8 @@ import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 
 type Props = {
-  showFolder: Boolean,
-  showNotes: Boolean,
+  showFolderSidebar: boolean,
+  showNotesSidebar: boolean,
   onCloseFolder: Function,
   onCloseNotes: Function,
 }
@@ -40,6 +40,7 @@ const ToolBarSection = (props: Props) => {
   });
 
   const handleFormatSelection = (name: string) => {
+    props.onCloseFolder();
     setSelectedFormat({
       Text: false,
       Image: false,
@@ -52,8 +53,8 @@ const ToolBarSection = (props: Props) => {
     <Grid container className={styles.toolbarSection}>
       <Grid size={{ md: 2 }}>
         {
-          !props.showFolder && (
-            <IconButton>
+          !props.showFolderSidebar && (
+            <IconButton onClick={() => props.onCloseFolder()}>
               <MenuIcon fontSize="small" />
             </IconButton>
           )
