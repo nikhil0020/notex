@@ -8,6 +8,7 @@ import { selectChildren } from '../../ducks/selector/systemFolderSelector'
 import { ChevronRight, ExpandMore, FolderOpenTwoTone, MenuBook } from '@mui/icons-material'
 import { selectCurrentFolderId } from '../../ducks/selector/uiSelector'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import FolderMenu from './FolderMenu'
 
 type Props = {
   folder: FileSystemNode,
@@ -24,11 +25,12 @@ const FolderTreeNode = ({
   }
 
   const [expand, setExpand] = useState(true);
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
-  const hasChildren = folder.childrenIds && folder.childrenIds.length > 0;
   const selectedFolder = useSelector(selectCurrentFolderId);
+  const children = useSelector(selectChildren(folder.id)) || []
+  const hasChildren = folder.childrenIds && folder.childrenIds.length > 0;
   const isSelected = selectedFolder === folder.id;
-  const children = hasChildren ? useSelector(selectChildren(folder.id)) : [];
   
   const dispatch = useDispatch();
 
@@ -94,6 +96,7 @@ const FolderTreeNode = ({
           <IconButton
             onClick={(e) => {
               e.stopPropagation()
+              setAnchorEl(e.currentTarget)
             }}
           >
             <MoreHorizIcon
@@ -103,6 +106,11 @@ const FolderTreeNode = ({
               }}
             />
           </IconButton>
+          <FolderMenu
+            folderId={folder.id}
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+          />
         </Box>
       </Box>
       {

@@ -7,13 +7,17 @@ import NotesSection from './components/NotesSection/NotesSection'
 import NoteEditorSection from './components/NoteEditorSection/NoteEditorSection'
 import './styles/theme.css';
 import { useDispatch, useSelector } from 'react-redux'
-import { selectIsFolderSidebarOpen, selectIsNoteEditorOpen } from './ducks/selector/uiSelector'
-import { toogleFolderSidebar, toogleNotesSidebar } from './ducks/slice/uiSlice'
+import { selectFolderDialogOpen, selectIsFolderSidebarOpen, selectIsNoteEditorOpen, selectNewFolderName } from './ducks/selector/uiSelector'
+import { setFolderDialogState, setNewFolderName, toggleFolderSidebar, toggleNotesSidebar } from './ducks/slice/uiSlice'
+import { createFolder } from './ducks/slice/fileSystemSlice';
+import NewFolderDialog from './components/FolderSection/NewFolderDialog';
 
 function App() {
 
   const showFolderSidebar = useSelector(selectIsFolderSidebarOpen);
   const showNotesSidebar = useSelector(selectIsNoteEditorOpen);
+  const folderDialogState = useSelector(selectFolderDialogOpen);
+  const newFolderName = useSelector(selectNewFolderName);
 
   const dispatch = useDispatch();
 
@@ -22,6 +26,24 @@ function App() {
   if (!showFolderSidebar) noteEditorMd += 4;
   if (!showNotesSidebar) noteEditorMd += 4;
 
+  const handleFolderDialogClose = () => {
+    dispatch(setNewFolderName("New Folder"));
+    dispatch(setFolderDialogState({
+      open: false,
+      parentId: null,
+    }));
+  }
+
+  const handleAddNewFolderClick = () => {
+    dispatch(createFolder(newFolderName, folderDialogState.parentId));
+    handleFolderDialogClose();
+  }
+
+  const handleNewFolderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    dispatch(setNewFolderName(e.target.value))
+  }
+
   return (
     <>
       <Grid container columns={24}>
@@ -29,8 +51,8 @@ function App() {
           <ToolBarSection
             showFolderSidebar={showFolderSidebar}
             showNotesSidebar={showNotesSidebar}
-            onCloseFolder={() => dispatch(toogleFolderSidebar())}
-            onCloseNotes={() => dispatch(toogleNotesSidebar())}
+            onCloseFolder={() => dispatch(toggleFolderSidebar())}
+            onCloseNotes={() => dispatch(toggleNotesSidebar())}
           />
         </Grid>
         <Grid container size={{ xs: 24}}>
@@ -48,6 +70,13 @@ function App() {
             <NoteEditorSection />
           </Grid>
         </Grid>
+        <NewFolderDialog
+          open={folderDialogState.open}
+          onChange={handleNewFolderNameChange}
+          onClose={handleFolderDialogClose}
+          value={newFolderName}
+          confirmClick={handleAddNewFolderClick}
+        />
       </Grid>
     </>
   )

@@ -4,7 +4,6 @@ import {
 } from "@reduxjs/toolkit";
 
 type ToolType = "text" | "handwriting" | "image"
-
 interface UIState {
   currentFolderId: string | null
   currentNoteId: string | null
@@ -12,6 +11,11 @@ interface UIState {
   isFolderSidebarOpen: boolean
   isNotesSidebarOpen: boolean
   newFolderCount: number,
+  folderDialogState: {
+    open: boolean,
+    parentId: string | null,
+  },
+  newFolderName: string,
 }
 
 const initialState: UIState = {
@@ -21,6 +25,11 @@ const initialState: UIState = {
   isFolderSidebarOpen: true,
   isNotesSidebarOpen: true,
   newFolderCount: 0,
+  folderDialogState: {
+    open: false,
+    parentId: null,
+  },
+  newFolderName: "New Folder"
 }
 
 const uiSlice = createSlice({
@@ -40,12 +49,21 @@ const uiSlice = createSlice({
       state.selectedTool = action.payload
     },
 
-    toogleFolderSidebar(state) {
+    toggleFolderSidebar(state) {
       state.isFolderSidebarOpen = !state.isFolderSidebarOpen
     },
 
-    toogleNotesSidebar(state) {
+    toggleNotesSidebar(state) {
       state.isNotesSidebarOpen = !state.isNotesSidebarOpen
+    },
+
+    setFolderDialogState(state, action: PayloadAction<{ open: boolean, parentId: string | null }>) {
+      state.folderDialogState = action.payload
+
+    },
+
+    setNewFolderName(state, action: PayloadAction<string>) {
+      state.newFolderName = action.payload;
     }
   }
 });
@@ -54,8 +72,10 @@ export const {
   setCurrentFolder,
   setCurrentNote,
   setSelectedTool,
-  toogleFolderSidebar,
-  toogleNotesSidebar
+  toggleFolderSidebar,
+  toggleNotesSidebar,
+  setFolderDialogState,
+  setNewFolderName,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

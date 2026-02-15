@@ -1,9 +1,7 @@
-import { Box, Button, Dialog,
-DialogActions, DialogContent, DialogTitle,
-Divider, TextField, Typography } from '@mui/material'
+import { Box, Divider, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCurrentFolder } from '../../ducks/slice/uiSlice'
+import { setCurrentFolder, setFolderDialogState } from '../../ducks/slice/uiSlice'
 import styles from './styles.module.css';
 import { selectCurrentFolderId } from '../../ducks/selector/uiSelector';
 import { getRootFolders } from '../../ducks/selector/systemFolderSelector';
@@ -12,58 +10,8 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import FolderOpenTwoToneIcon from '@mui/icons-material/FolderOpenTwoTone';
 import FolderSpecialTwoToneIcon from '@mui/icons-material/FolderSpecialTwoTone';
 import { Add } from '@mui/icons-material';
-import { createFolder } from '../../ducks/slice/fileSystemSlice';
 
 type Props = {}
-
-type NewFolderDialogProps = {
-  open: boolean,
-  onClose: any,
-  onChange: any,
-  value: string,
-  confirmClick: any,
-}
-
-const NewFolderDialog = ({
-  open,
-  onClose,
-  onChange,
-  value,
-  confirmClick,
-
-}: NewFolderDialogProps) => {
-  return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-    >
-      <DialogTitle>
-        New Folder
-      </DialogTitle>
-      <DialogContent
-        sx={{ minHeight: "100px", width: "350px" }}
-      >
-        <TextField
-          fullWidth
-          autoFocus
-          size='small'
-          id='add-new-folder-text-field'
-          onChange={onChange}
-          value={value}
-          slotProps={{
-            input: {
-              onFocus: (e) => e.target.select(),
-            }
-          }}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={confirmClick} disabled={value.length === 0}>Ok</Button>
-      </DialogActions>
-    </Dialog>
-  )
-}
 
 type DefaultFolderButtonCompType = {
   selectedFolder: string | null,
@@ -100,36 +48,14 @@ const DefaultFolderButtons = ({
   )
 }
 
-
-
 const FolderSection = (props: Props) => {
-
-  const [openDialog, setDialogOpen] = useState(false);
-  const [newFolderName, setNewFolderName] = useState<string>("New Folder");
-
-  const dispatch = useDispatch();
-
   const selectedFolder = useSelector(selectCurrentFolderId);
   const rootFolders = useSelector(getRootFolders);
-
+  
+  const dispatch = useDispatch();
   const handleButtonClick = (folderName: string | null) => {
     dispatch(setCurrentFolder(folderName))
   };
-
-  const handleClose = () => {
-    setNewFolderName("New Folder")
-    setDialogOpen(false);
-  }
-
-  const handleAddNewFolderClick = () => {
-    dispatch(createFolder(newFolderName, null));
-    handleClose()
-  }
-
-  const handleFolderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-    setNewFolderName(e.target.value)
-  }
 
   return (
     <Box className={styles.folderSection}>
@@ -170,7 +96,10 @@ const FolderSection = (props: Props) => {
       <Divider sx={{ my: 0.5}} />
       <Box
         className={styles.folderButton}
-        onClick={() => setDialogOpen(true)}
+        onClick={() => dispatch(setFolderDialogState({
+          open: true,
+          parentId: null,
+        }))}
       >
         <Add fontSize="small" color="primary" sx={{ mr: 0.5 }}/>
         <Typography
@@ -180,13 +109,6 @@ const FolderSection = (props: Props) => {
           </Typography>
       </Box>
       <Divider sx={{ my: 0.5}} />
-      <NewFolderDialog
-        open={openDialog}
-        onClose={handleClose}
-        confirmClick={handleAddNewFolderClick}
-        value={newFolderName}
-        onChange={handleFolderNameChange}
-      />
     </Box>
   )
 }

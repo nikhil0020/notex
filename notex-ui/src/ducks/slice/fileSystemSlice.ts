@@ -41,6 +41,13 @@ const fileSystemSlice = createSlice({
     createFolder: {
       reducer(state, action: PayloadAction<FolderNode>) {
         adapter.addOne(state, action.payload);
+        const { parentId, id } = action.payload;
+        if (parentId) {
+          const parent = state.entities[parentId];
+          if (parent && parent.type === "folder") {
+            parent.childrenIds.push(id);
+          }
+        }
       },
       prepare(name: string, parentId: string | null) {
         return {
