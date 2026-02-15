@@ -9,3 +9,5 @@ export const selectCurrentFolderId = (state: RootState) => state.ui.currentFolde
 export const selectCurrentNoteId = (state: RootState) => state.ui.currentNoteId;
 
 export const selectSelectedTool = (state: RootState) => state.ui.selectedTool;
+
+export const selectNewFolderCount = (state: RootState) => state.ui.newFolderCount;

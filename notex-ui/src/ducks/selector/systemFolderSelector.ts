@@ -29,6 +29,12 @@ export const selectChildren = (parentId: string ) => (state: RootState) => {
   )
 }
 
+export const getRootFolders = (state: RootState) => {
+  return state.fileSystem.ids
+          .filter((id) => state.fileSystem.entities[id].parentId === null)
+          .map((id) => state.fileSystem.entities[id]);
+}
+
 export const selectBlocksByNote = (noteId: string) => (state: RootState) => {
   const note = state.fileSystem.entities[noteId];
 

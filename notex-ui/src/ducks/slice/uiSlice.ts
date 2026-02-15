@@ -11,6 +11,7 @@ interface UIState {
   selectedTool: ToolType 
   isFolderSidebarOpen: boolean
   isNotesSidebarOpen: boolean
+  newFolderCount: number,
 }
 
 const initialState: UIState = {
@@ -19,6 +20,7 @@ const initialState: UIState = {
   selectedTool: "text",
   isFolderSidebarOpen: true,
   isNotesSidebarOpen: true,
+  newFolderCount: 0,
 }
 
 const uiSlice = createSlice({
