@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentFolder } from '../../ducks/slice/uiSlice'
 import styles from './styles.module.css';
-import { selectCurrentFolderId, selectNewFolderCount } from '../../ducks/selector/uiSelector';
+import { selectCurrentFolderId } from '../../ducks/selector/uiSelector';
 import { getRootFolders } from '../../ducks/selector/systemFolderSelector';
 import FolderTreeNode from './FolderTreeNode';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -45,10 +45,16 @@ const NewFolderDialog = ({
       >
         <TextField
           fullWidth
+          autoFocus
           size='small'
           id='add-new-folder-text-field'
           onChange={onChange}
           value={value}
+          slotProps={{
+            input: {
+              onFocus: (e) => e.target.select(),
+            }
+          }}
         />
       </DialogContent>
       <DialogActions>
@@ -111,6 +117,7 @@ const FolderSection = (props: Props) => {
   };
 
   const handleClose = () => {
+    setNewFolderName("New Folder")
     setDialogOpen(false);
   }
 
@@ -165,7 +172,12 @@ const FolderSection = (props: Props) => {
         className={styles.folderButton}
         onClick={() => setDialogOpen(true)}
       >
-        <Add fontSize="small" color="primary" sx={{ mr: 0.5 }}/> New Folder
+        <Add fontSize="small" color="primary" sx={{ mr: 0.5 }}/>
+        <Typography
+            variant="body2"
+          >
+            Add New Folder
+          </Typography>
       </Box>
       <Divider sx={{ my: 0.5}} />
       <NewFolderDialog
