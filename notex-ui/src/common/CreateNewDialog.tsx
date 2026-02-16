@@ -3,28 +3,32 @@ import React from 'react'
 
 type Props = {}
 
-type NewFolderDialogProps = {
+type CreateNewDialogProps = {
+  title: string,
   open: boolean,
   onClose: any,
   onChange: any,
   value: string,
   confirmClick: any,
+  type: "folder" | "note" | null,
 }
 
-const NewFolderDialog = ({
+const CreateNewDialog = ({
+  title,
   open,
   onClose,
   onChange,
   value,
   confirmClick,
-}: NewFolderDialogProps) => {
+  type,
+}: CreateNewDialogProps) => {
   return (
     <Dialog
       open={open}
       onClose={onClose}
     >
       <DialogTitle>
-        New Folder
+        {title}
       </DialogTitle>
       <DialogContent
         sx={{ minHeight: "100px", width: "350px" }}
@@ -32,9 +36,11 @@ const NewFolderDialog = ({
         <TextField
           fullWidth
           autoFocus
-          size='small'
-          id='add-new-folder-text-field'
+          size="small"
+          id='create-new-text-field'
+          label={type === "folder" ? "Folder Name" : "Note Title"}
           onChange={onChange}
+          variant="standard"
           value={value}
           slotProps={{
             input: {
@@ -51,4 +57,4 @@ const NewFolderDialog = ({
   )
 }
 
-export default NewFolderDialog
+export default CreateNewDialog

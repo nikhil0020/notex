@@ -9,6 +9,10 @@ import ImageIcon from '@mui/icons-material/Image';
 import DrawIcon from '@mui/icons-material/Draw';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentFolderId } from '../../ducks/selector/uiSelector';
+import { createNote } from '../../ducks/slice/fileSystemSlice';
 
 type Props = {
   showFolderSidebar: boolean,
@@ -33,25 +37,32 @@ const StyledGroupButton = ({ name, Icon, handleFormatSelection }: StyledGroupBut
 
 const ToolBarSection = (props: Props) => {
 
-  const [selectedFormat, setSelectedFormat] = useState({
-    Text: true,
-    Image: false,
-    Write: false,
-  });
+  const selectedFolderId = useSelector(selectCurrentFolderId);
+  
+  const dispatch = useDispatch();
+
+  const handleCreateNewNote = () => {
+    let parentId = "notes";
+    if (selectedFolderId) {
+      parentId = ["notes", "favorites", "all-notes", "trash"].includes(selectedFolderId) ? "notes" : selectedFolderId;
+    }
+    dispatch(createNote("New Note", parentId))
+  }
 
   const handleFormatSelection = (name: string) => {
-    props.onCloseFolder();
-    setSelectedFormat({
-      Text: false,
-      Image: false,
-      Write: false,
-      [name]: true,
-    })
+
   }
 
   return (
     <Grid container className={styles.toolbarSection}>
-      <Grid size={{ md: 2 }}>
+      <Grid size={{ md: 1 }} display="flex" alignItems="center">
+        <IconButton
+          onClick={handleCreateNewNote}
+        >
+          <NoteAddIcon fontSize="small" />
+        </IconButton>
+      </Grid>
+      <Grid size={{ md: 1 }}>
         {
           !props.showFolderSidebar && (
             <IconButton onClick={() => props.onCloseFolder()}>

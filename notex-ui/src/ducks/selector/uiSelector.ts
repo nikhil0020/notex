@@ -12,6 +12,6 @@ export const selectSelectedTool = (state: RootState) => state.ui.selectedTool;
 
 export const selectNewFolderCount = (state: RootState) => state.ui.newFolderCount;
 
-export const selectFolderDialogOpen = (state: RootState) => state.ui.folderDialogState;
+export const selectCreateNewDialogState = (state: RootState) => state.ui.folderDialogState;
 
 export const selectNewFolderName = (state: RootState) => state.ui.newFolderName;

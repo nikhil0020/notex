@@ -1,9 +1,9 @@
 import { Menu, MenuItem, Paper } from '@mui/material'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { createFolder } from '../../ducks/slice/fileSystemSlice'
+import { useDispatch, useSelector } from 'react-redux'
 import { Add } from '@mui/icons-material'
-import { setFolderDialogState } from '../../ducks/slice/uiSlice'
+import { setCreateNewDialogState } from '../../ducks/slice/uiSlice'
+import { selectCreateNewDialogState } from '../../ducks/selector/uiSelector'
 
 type Props = {
   folderId: string,
@@ -17,6 +17,7 @@ const FolderMenu = ({
   setAnchorEl
 }: Props) => {
 
+  const newDialogState = useSelector(selectCreateNewDialogState);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
 
@@ -25,8 +26,14 @@ const FolderMenu = ({
   }
 
   const handleAddNewFolderClick = () => {
-    dispatch(setFolderDialogState({ open: true, parentId: folderId }))
     handleClose()
+    dispatch(setCreateNewDialogState({
+      title: "New Folder",
+      value: newDialogState.value,
+      open: true,
+      parentId: folderId,
+      type: "folder"
+    }))
   }
 
   return (

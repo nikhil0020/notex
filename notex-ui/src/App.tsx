@@ -7,17 +7,16 @@ import NotesSection from './components/NotesSection/NotesSection'
 import NoteEditorSection from './components/NoteEditorSection/NoteEditorSection'
 import './styles/theme.css';
 import { useDispatch, useSelector } from 'react-redux'
-import { selectFolderDialogOpen, selectIsFolderSidebarOpen, selectIsNoteEditorOpen, selectNewFolderName } from './ducks/selector/uiSelector'
-import { setFolderDialogState, setNewFolderName, toggleFolderSidebar, toggleNotesSidebar } from './ducks/slice/uiSlice'
+import { selectCreateNewDialogState, selectIsFolderSidebarOpen, selectIsNoteEditorOpen } from './ducks/selector/uiSelector'
+import { setCreateNewDialogState, toggleFolderSidebar, toggleNotesSidebar } from './ducks/slice/uiSlice'
+import CreateNewDialog from './common/CreateNewDialog';
 import { createFolder } from './ducks/slice/fileSystemSlice';
-import NewFolderDialog from './components/FolderSection/NewFolderDialog';
 
 function App() {
 
   const showFolderSidebar = useSelector(selectIsFolderSidebarOpen);
   const showNotesSidebar = useSelector(selectIsNoteEditorOpen);
-  const folderDialogState = useSelector(selectFolderDialogOpen);
-  const newFolderName = useSelector(selectNewFolderName);
+  const createNewDialogState = useSelector(selectCreateNewDialogState);
 
   const dispatch = useDispatch();
 
@@ -27,21 +26,26 @@ function App() {
   if (!showNotesSidebar) noteEditorMd += 4;
 
   const handleFolderDialogClose = () => {
-    dispatch(setNewFolderName("New Folder"));
-    dispatch(setFolderDialogState({
+    dispatch(setCreateNewDialogState({
       open: false,
+      title: "",
+      value: "",
       parentId: null,
+      type: null,
     }));
   }
 
-  const handleAddNewFolderClick = () => {
-    dispatch(createFolder(newFolderName, folderDialogState.parentId));
+  const handleCreateFolderConfirmClick = () => {
+    dispatch(createFolder(createNewDialogState.value, createNewDialogState.parentId));
     handleFolderDialogClose();
   }
 
   const handleNewFolderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    dispatch(setNewFolderName(e.target.value))
+    dispatch(setCreateNewDialogState({
+      ...createNewDialogState,
+      value: e.target.value,
+    }))
   }
 
   return (
@@ -70,12 +74,14 @@ function App() {
             <NoteEditorSection />
           </Grid>
         </Grid>
-        <NewFolderDialog
-          open={folderDialogState.open}
+        <CreateNewDialog
+          title={createNewDialogState.title}
+          open={createNewDialogState.open}
           onChange={handleNewFolderNameChange}
           onClose={handleFolderDialogClose}
-          value={newFolderName}
-          confirmClick={handleAddNewFolderClick}
+          value={createNewDialogState.value}
+          confirmClick={handleCreateFolderConfirmClick}
+          type={createNewDialogState.type}
         />
       </Grid>
     </>

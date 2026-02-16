@@ -1,9 +1,9 @@
 import { Box, Divider, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCurrentFolder, setFolderDialogState } from '../../ducks/slice/uiSlice'
+import { setCurrentFolder, setCreateNewDialogState } from '../../ducks/slice/uiSlice'
 import styles from './styles.module.css';
-import { selectCurrentFolderId } from '../../ducks/selector/uiSelector';
+import { selectCreateNewDialogState, selectCurrentFolderId } from '../../ducks/selector/uiSelector';
 import { getRootFolders } from '../../ducks/selector/systemFolderSelector';
 import FolderTreeNode from './FolderTreeNode';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -51,11 +51,22 @@ const DefaultFolderButtons = ({
 const FolderSection = (props: Props) => {
   const selectedFolder = useSelector(selectCurrentFolderId);
   const rootFolders = useSelector(getRootFolders);
+  const newDialogState = useSelector(selectCreateNewDialogState);
   
   const dispatch = useDispatch();
   const handleButtonClick = (folderName: string | null) => {
     dispatch(setCurrentFolder(folderName))
   };
+
+  const handleAddNewFolderClick = () => {
+    dispatch(setCreateNewDialogState({
+      title: "New Folder",
+      value: newDialogState.value,
+      open: true,
+      parentId: null,
+      type: "folder"
+    }))
+  }
 
   return (
     <Box className={styles.folderSection}>
@@ -74,6 +85,13 @@ const FolderSection = (props: Props) => {
         folderName="Favorites"
         folderId="favorites"
         Icon={FolderSpecialTwoToneIcon}
+      />
+      <DefaultFolderButtons
+        selectedFolder={selectedFolder}
+        onClick={() => handleButtonClick("notes")}
+        folderName="Notes"
+        folderId="notes"
+        Icon={FolderOpenTwoToneIcon}
       />
       <Divider sx={{ my: 0.5 }}/>
       {
@@ -96,10 +114,7 @@ const FolderSection = (props: Props) => {
       <Divider sx={{ my: 0.5}} />
       <Box
         className={styles.folderButton}
-        onClick={() => dispatch(setFolderDialogState({
-          open: true,
-          parentId: null,
-        }))}
+        onClick={handleAddNewFolderClick}
       >
         <Add fontSize="small" color="primary" sx={{ mr: 0.5 }}/>
         <Typography

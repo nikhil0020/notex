@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import type { FileSystemNode, FolderNode } from '../../ducks/slice/fileSystemSlice'
+import type { FileSystemNode } from '../../ducks/slice/fileSystemSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentFolder } from '../../ducks/slice/uiSlice'
 import { Box, IconButton, Typography } from '@mui/material'
 import FolderTree from './FolderTree'
 import { selectChildren } from '../../ducks/selector/systemFolderSelector'
-import { ChevronRight, ExpandMore, FolderOpenTwoTone, MenuBook } from '@mui/icons-material'
+import { ChevronRight, ExpandMore, FolderOpenTwoTone } from '@mui/icons-material'
 import { selectCurrentFolderId } from '../../ducks/selector/uiSelector'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FolderMenu from './FolderMenu'
@@ -28,7 +28,7 @@ const FolderTreeNode = ({
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
   const selectedFolder = useSelector(selectCurrentFolderId);
-  const children = useSelector(selectChildren(folder.id)) || []
+  const children = useSelector(selectChildren(folder.id, "folder")) || []
   const hasChildren = folder.childrenIds && folder.childrenIds.length > 0;
   const isSelected = selectedFolder === folder.id;
   

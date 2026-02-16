@@ -5,7 +5,7 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 
-type NodeType = "folder" | "note";
+export type NodeType = "folder" | "note";
 
 interface BaseNode {
   id: string

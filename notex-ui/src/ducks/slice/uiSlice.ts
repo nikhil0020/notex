@@ -4,6 +4,14 @@ import {
 } from "@reduxjs/toolkit";
 
 type ToolType = "text" | "handwriting" | "image"
+
+interface CreateNewDialogState {
+  open: boolean,
+  value: string,
+  title: string,
+  type: "note" | "folder" | null,
+  parentId: string | null,
+}
 interface UIState {
   currentFolderId: string | null
   currentNoteId: string | null
@@ -11,10 +19,7 @@ interface UIState {
   isFolderSidebarOpen: boolean
   isNotesSidebarOpen: boolean
   newFolderCount: number,
-  folderDialogState: {
-    open: boolean,
-    parentId: string | null,
-  },
+  folderDialogState: CreateNewDialogState,
   newFolderName: string,
 }
 
@@ -27,7 +32,10 @@ const initialState: UIState = {
   newFolderCount: 0,
   folderDialogState: {
     open: false,
-    parentId: null,
+    title: "",
+    value: "",
+    type: null,
+    parentId: null
   },
   newFolderName: "New Folder"
 }
@@ -57,9 +65,8 @@ const uiSlice = createSlice({
       state.isNotesSidebarOpen = !state.isNotesSidebarOpen
     },
 
-    setFolderDialogState(state, action: PayloadAction<{ open: boolean, parentId: string | null }>) {
+    setCreateNewDialogState(state, action: PayloadAction<CreateNewDialogState>) {
       state.folderDialogState = action.payload
-
     },
 
     setNewFolderName(state, action: PayloadAction<string>) {
@@ -74,7 +81,7 @@ export const {
   setSelectedTool,
   toggleFolderSidebar,
   toggleNotesSidebar,
-  setFolderDialogState,
+  setCreateNewDialogState,
   setNewFolderName,
 } = uiSlice.actions;
 
