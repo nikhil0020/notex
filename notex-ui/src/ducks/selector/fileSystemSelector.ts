@@ -3,8 +3,7 @@ import type { NodeType } from "../slice/fileSystemSlice"
 
 export const selectAllNotes = (state: RootState) =>
   Object.values(state.fileSystem.entities).filter(
-    (node) =>
-      node?.type === "note" && !node.isTrashed
+    (node) => node?.type === "note" && !node.isTrashed
   )
 
 export const selectFavorites = (state: RootState) =>
@@ -38,11 +37,18 @@ export const selectNoteById = (noteId: string) => (state: RootState) => {
 }
 
 export const selectChildren = (parentId: string, type: NodeType) => (state: RootState) => {
-  const folder = state.fileSystem.entities[parentId]
-  if ( folder && folder.type === "folder" )  { 
-    return folder.childrenIds.map(
+  if ( type === "folder" )  {
+    const folder = state.fileSystem.entities[parentId]
+    return folder.type === "folder" ? folder.folderChildrenIds.map(
       id => state.fileSystem.entities[id]
-    ).filter(node => node?.type === type)
+    ) : []
+  }
+
+  if (type === "note") {
+    const folder = state.fileSystem.entities[parentId]
+    return folder.type === "folder" ? folder.noteChildrenIds.map(
+      id => state.fileSystem.entities[id]
+    ) : []
   }
 
   return [];

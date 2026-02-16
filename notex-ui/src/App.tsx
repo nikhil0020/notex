@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectCreateNewDialogState, selectIsFolderSidebarOpen, selectIsNoteEditorOpen } from './ducks/selector/uiSelector'
 import { setCreateNewDialogState, toggleFolderSidebar, toggleNotesSidebar } from './ducks/slice/uiSlice'
 import CreateNewDialog from './common/CreateNewDialog';
-import { createFolder } from './ducks/slice/fileSystemSlice';
+import { createFolder, createNote } from './ducks/slice/fileSystemSlice';
 
 function App() {
 
@@ -36,7 +36,13 @@ function App() {
   }
 
   const handleCreateFolderConfirmClick = () => {
-    dispatch(createFolder(createNewDialogState.value, createNewDialogState.parentId));
+    if (createNewDialogState.type === "folder") {
+      dispatch(createFolder(createNewDialogState.value, createNewDialogState.parentId));
+    }
+
+    if (createNewDialogState.type === "note" && createNewDialogState.parentId) {
+      dispatch(createNote(createNewDialogState.value, createNewDialogState.parentId));
+    }
     handleFolderDialogClose();
   }
 

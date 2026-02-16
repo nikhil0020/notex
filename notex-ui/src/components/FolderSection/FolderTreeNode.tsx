@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentFolder } from '../../ducks/slice/uiSlice'
 import { Box, IconButton, Typography } from '@mui/material'
 import FolderTree from './FolderTree'
-import { selectChildren } from '../../ducks/selector/systemFolderSelector'
+import { selectChildren } from '../../ducks/selector/fileSystemSelector'
 import { ChevronRight, ExpandMore, FolderOpenTwoTone } from '@mui/icons-material'
 import { selectCurrentFolderId } from '../../ducks/selector/uiSelector'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -29,7 +29,7 @@ const FolderTreeNode = ({
 
   const selectedFolder = useSelector(selectCurrentFolderId);
   const children = useSelector(selectChildren(folder.id, "folder")) || []
-  const hasChildren = folder.childrenIds && folder.childrenIds.length > 0;
+  const hasChildren = folder.folderChildrenIds && folder.folderChildrenIds.length > 0;
   const isSelected = selectedFolder === folder.id;
   
   const dispatch = useDispatch();

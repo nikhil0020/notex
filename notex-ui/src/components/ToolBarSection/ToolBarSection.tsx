@@ -11,8 +11,8 @@ import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentFolderId } from '../../ducks/selector/uiSelector';
-import { createNote } from '../../ducks/slice/fileSystemSlice';
+import { selectCreateNewDialogState, selectCurrentFolderId } from '../../ducks/selector/uiSelector';
+import { setCreateNewDialogState } from '../../ducks/slice/uiSlice';
 
 type Props = {
   showFolderSidebar: boolean,
@@ -38,15 +38,22 @@ const StyledGroupButton = ({ name, Icon, handleFormatSelection }: StyledGroupBut
 const ToolBarSection = (props: Props) => {
 
   const selectedFolderId = useSelector(selectCurrentFolderId);
+  const createNewDialogState = useSelector(selectCreateNewDialogState);
   
   const dispatch = useDispatch();
 
   const handleCreateNewNote = () => {
     let parentId = "notes";
     if (selectedFolderId) {
-      parentId = ["notes", "favorites", "all-notes", "trash"].includes(selectedFolderId) ? "notes" : selectedFolderId;
+      parentId = ["notes", "favorites", "all-notes", "trash", null].includes(selectedFolderId) ? "notes" : selectedFolderId;
     }
-    dispatch(createNote("New Note", parentId))
+    dispatch(setCreateNewDialogState({
+      title: "New Note",
+      open: true,
+      type: "note",
+      parentId: parentId,
+      value: createNewDialogState.value
+    }))
   }
 
   const handleFormatSelection = (name: string) => {

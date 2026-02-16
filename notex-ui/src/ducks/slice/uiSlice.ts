@@ -24,7 +24,7 @@ interface UIState {
 }
 
 const initialState: UIState = {
-  currentFolderId: null,
+  currentFolderId: "all-notes",
   currentNoteId: null,
   selectedTool: "text",
   isFolderSidebarOpen: true,

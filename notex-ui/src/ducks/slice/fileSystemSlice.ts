@@ -10,20 +10,22 @@ export type NodeType = "folder" | "note";
 interface BaseNode {
   id: string
   name: string
-  parentId: string | null
   type: NodeType
   createdAt: string
 }
 
 export interface FolderNode extends BaseNode {
+  parentId: string | null
   type: "folder",
-  childrenIds: string[]
+  folderChildrenIds: string[],
+  noteChildrenIds: string[],
 }
 
 // Notes does not store content directly
 export interface NoteNode extends BaseNode {
   type: "note"
   isFavorite: boolean
+  parentId: string
   isTrashed: boolean
   blockIds: string[] // for storing different kind of blocks
 }
@@ -32,7 +34,18 @@ export type FileSystemNode = FolderNode | NoteNode;
 
 const adapter = createEntityAdapter<FileSystemNode>();
 
-const initialState = adapter.getInitialState();
+const notesFolder: FolderNode = {
+  id: "notes",
+  name: "Notes",
+  type: "folder",
+  parentId: null,
+  folderChildrenIds: [],
+  noteChildrenIds: [],
+  createdAt: Date.now().toString(),
+}
+
+let initialState = adapter.getInitialState();
+initialState = adapter.addOne(initialState, notesFolder)
 
 const fileSystemSlice = createSlice({
   name: "fileSystem",
@@ -45,7 +58,7 @@ const fileSystemSlice = createSlice({
         if (parentId) {
           const parent = state.entities[parentId];
           if (parent && parent.type === "folder") {
-            parent.childrenIds.push(id);
+            parent.folderChildrenIds.push(id);
           }
         }
       },
@@ -57,7 +70,8 @@ const fileSystemSlice = createSlice({
             type: "folder" as const,
             parentId,
             createdAt: new Date().toISOString(),
-            childrenIds: []
+            folderChildrenIds: [],
+            noteChildrenIds: [],
           }
         }
       }
@@ -66,6 +80,11 @@ const fileSystemSlice = createSlice({
     createNote: {
       reducer(state, action: PayloadAction<NoteNode>) {
         adapter.addOne(state, action.payload);
+        const {parentId, id} = action.payload;
+        const parent = state.entities[parentId];
+        if (parent && parent.type === "folder") {
+          parent.noteChildrenIds.push(id)
+        }
       },
 
       prepare(name: string, parentId: string) {

@@ -1,36 +1,55 @@
-import { Box, Typography } from '@mui/material'
-import React from 'react'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectAllNotes, selectFavorites, selectTrash, selectChildren } from '../../ducks/selector/fileSystemSelector';
+import { selectCurrentFolderId } from '../../ducks/selector/uiSelector';
+import { Box, Divider, Typography } from '@mui/material';
+import NoteCard from './NoteCard';
 import styles from './styles.module.css';
-import FolderTwoToneIcon from '@mui/icons-material/FolderTwoTone';
-
-type NoteProps = {
-  title: string;
-  description: string;
-  folder: string;
-}
-
-const NoteCard = ({ title, description, folder} : NoteProps) => {
-  return (
-    <Box className={styles.noteCard}>
-      <Typography variant="body2" component="h6"> {title} </Typography>
-      <Typography variant="caption" component="p">
-        { description?.length > 100 ? description.slice(0, 100) + '...' : description}
-      </Typography>
-      <Typography variant="subtitle2" component="p" sx={{ alignItems: "center", display: "flex"}}>
-        <FolderTwoToneIcon fontSize="small" sx={{ mr: 0.5 }} /> {folder}
-      </Typography>
-    </Box>
-  )
-}
 
 const NotesSection = () => {
+  const selectedFolder = useSelector(selectCurrentFolderId);
+  // Get notes based on selected folder
+  let notes: any = [];
+  const allNotes = useSelector(selectAllNotes);
+  const favorites = useSelector(selectFavorites);
+  const trash = useSelector(selectTrash);
+
+  // For folder children
+  const folderNotes = useSelector(
+    selectedFolder && !['all-notes', 'favorites', 'trash'].includes(selectedFolder)
+      ? selectChildren(selectedFolder, 'note')
+      : () => []
+  );
+
+  if (selectedFolder === 'all-notes') {
+    notes = allNotes;
+  } else if (selectedFolder === 'favorites') {
+    notes = favorites;
+  } else if (selectedFolder === 'trash') {
+    notes = trash;
+  } else if (selectedFolder) {
+    notes = folderNotes;
+  }
+
   return (
     <Box className={styles.noteSection}>
       <Box>
         <Typography variant="h6" component="h6"> Notes </Typography>
-        
       </Box>
-      <NoteCard title="My First Note" description="This is the description of my first note." folder="Personal" />
+      <Divider sx={{ my: 0.5}}/>
+      {notes && notes.length > 0 ? (
+        notes.map((note: { id: string, name: string, parentId: string }) => (
+          <NoteCard
+            key={note.id}
+            title={note.name}
+            folderId={note.parentId || ''}
+          />
+        ))
+      ) : (
+        <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
+          No notes found.
+        </Typography>
+      )}
     </Box>
   )
 }

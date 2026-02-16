@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentFolder, setCreateNewDialogState } from '../../ducks/slice/uiSlice'
 import styles from './styles.module.css';
 import { selectCreateNewDialogState, selectCurrentFolderId } from '../../ducks/selector/uiSelector';
-import { getRootFolders } from '../../ducks/selector/systemFolderSelector';
+import { getRootFolders } from '../../ducks/selector/fileSystemSelector';
 import FolderTreeNode from './FolderTreeNode';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import FolderOpenTwoToneIcon from '@mui/icons-material/FolderOpenTwoTone';
@@ -85,13 +85,6 @@ const FolderSection = (props: Props) => {
         folderName="Favorites"
         folderId="favorites"
         Icon={FolderSpecialTwoToneIcon}
-      />
-      <DefaultFolderButtons
-        selectedFolder={selectedFolder}
-        onClick={() => handleButtonClick("notes")}
-        folderName="Notes"
-        folderId="notes"
-        Icon={FolderOpenTwoToneIcon}
       />
       <Divider sx={{ my: 0.5 }}/>
       {
