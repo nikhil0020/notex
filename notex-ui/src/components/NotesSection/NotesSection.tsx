@@ -38,12 +38,13 @@ const NotesSection = () => {
       </Box>
       <Divider sx={{ my: 0.5}}/>
       {notes && notes.length > 0 ? (
-        notes.map((note: { id: string, name: string, parentId: string }) => (
+        notes.map((note: { id: string, name: string, parentId: string, isFavorite: boolean }) => (
           <NoteCard
             key={note.id}
             id={note.id}
             title={note.name}
             folderId={note.parentId || ''}
+            isFavorite={note.isFavorite}
           />
         ))
       ) : (

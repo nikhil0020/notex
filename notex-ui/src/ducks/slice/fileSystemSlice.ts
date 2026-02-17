@@ -107,7 +107,7 @@ const fileSystemSlice = createSlice({
       const note = state.entities[action.payload];
 
       if (note?.type === "note" && !note.isTrashed) {
-        note.isFavorite = true;
+        note.isFavorite = !note.isFavorite;
       }
     },
 
