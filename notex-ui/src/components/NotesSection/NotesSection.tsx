@@ -41,6 +41,7 @@ const NotesSection = () => {
         notes.map((note: { id: string, name: string, parentId: string }) => (
           <NoteCard
             key={note.id}
+            id={note.id}
             title={note.name}
             folderId={note.parentId || ''}
           />

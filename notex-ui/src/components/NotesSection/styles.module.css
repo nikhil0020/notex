@@ -15,5 +15,9 @@
   padding: 5px 10px;
   margin-bottom: 8px;
   cursor: pointer;
+  background-color: rgb(237, 227, 209);
+}
+
+.noteCardActive {
   background-color: wheat;
 }

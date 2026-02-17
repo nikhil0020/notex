@@ -2,20 +2,30 @@ import React from 'react'
 import FolderTwoToneIcon from '@mui/icons-material/FolderTwoTone';
 import { Box, Typography } from '@mui/material'
 import styles from './styles.module.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectFolderById } from '../../ducks/selector/fileSystemSelector';
+import { selectCurrentNoteId } from '../../ducks/selector/uiSelector';
+import { setCurrentNote } from '../../ducks/slice/uiSlice';
 
 type NoteProps = {
-  title: string;
-  folderId: string;
+  id: string
+  title: string
+  folderId: string
 }
 
-const NoteCard = ({ title, folderId} : NoteProps) => {
+const NoteCard = ({ id, title, folderId} : NoteProps) => {
 
   const noteFolder = useSelector(selectFolderById(folderId));
+  const selectedNote = useSelector(selectCurrentNoteId);
+
+  const dispatch = useDispatch();
+
+  const handleOnClick = () => {
+    dispatch(setCurrentNote(id));
+  }
 
   return (
-    <Box className={styles.noteCard}>
+    <Box className={`${styles.noteCard} ${ selectedNote === id ? styles.noteCardActive : ''}`} onClick={handleOnClick}>
       <Typography variant="inherit" sx={{ fontSize: "15px", fontWeight: 600 }} component="h6"> {title} </Typography>
       {/* <Typography variant="caption" component="p">
         { description?.length > 100 ? description.slice(0, 100) + '...' : description}
