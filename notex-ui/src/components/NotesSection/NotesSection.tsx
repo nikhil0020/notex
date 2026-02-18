@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectAllNotes, selectFavorites, selectTrash, selectChildren } from '../../ducks/selector/fileSystemSelector';
 import { selectCurrentFolderId } from '../../ducks/selector/uiSelector';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import NoteCard from './NoteCard';
 import styles from './styles.module.css';
 

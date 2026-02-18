@@ -63,9 +63,9 @@ function App() {
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       const newWidth = startWidth + (moveEvent.clientX - startX);
-      if (newWidth <= 120) {
+      if (newWidth <= 140) {
         setFolderWidth(0);
-      } else {
+      } else if (newWidth <= 400) {
         setFolderWidth(newWidth);
       }
     };
@@ -122,7 +122,7 @@ function App() {
           background: "#f5f5f5",
           overflow: "auto",
           position: "relative",
-          transition: folderWidth === 0 ? "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s" : undefined,
+          transition: (folderWidth === 0 || folderWidth === 280) ? "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s" : undefined,
         }}
       >
         <FolderSection />

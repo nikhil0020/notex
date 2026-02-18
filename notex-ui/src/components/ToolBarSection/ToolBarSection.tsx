@@ -76,44 +76,7 @@ const ToolBarSection = (props: Props) => {
         </IconButton>
       </Grid>
       <Grid size={{ md: 10 }} display="flex" alignItems="center" justifyContent="flex-end">
-        <ButtonGroup
-          variant="text"
-          aria-label="Button Group"
-          sx={{
-            borderRadius: "5px",
-            border: "1px solid gray"
-          }}
-        >
-          <StyledGroupButton
-            name="Text"
-            Icon={TextFieldsIcon}
-            handleFormatSelection={handleFormatSelection}
-          />
-          <StyledGroupButton
-            name="Image"
-            Icon={ImageIcon}
-            handleFormatSelection={handleFormatSelection}
-          />
-          <StyledGroupButton
-            name="Write"
-            Icon={DrawIcon}
-            handleFormatSelection={handleFormatSelection}
-          />
-        </ButtonGroup>
-        <ButtonGroup variant="outlined" sx={{ mx: 3 }}>
-          <Button size="small" color="inherit" variant="text">
-            <UndoRoundedIcon />
-          </Button>
-          <Button size="small" color="inherit" variant="text">
-            <RedoRoundedIcon />
-          </Button>
-        </ButtonGroup>
-        <Button variant="contained" size="small" className={styles.generateSummaryButton}>
-          <AutoAwesomeRoundedIcon fontSize="small" sx={{ mr: 1}} /> Generate Summary
-        </Button>
-        <Button size="small" variant="outlined" color="inherit" sx={{ mx: 1, px: 2, borderRadius: "5px"}}>
-          <ModeEditTwoToneIcon fontSize="small" sx={{ mr: 1 }}/> Erase
-        </Button>
+        
       </Grid>
     </Grid>
   )
