@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Grid, IconButton } from '@mui/material';
-import React, { useState, type ElementType } from 'react';
+import React, { type ElementType } from 'react';
 import styles from './styles.module.css';
 import MenuIcon from '@mui/icons-material/Menu';
 import RedoRoundedIcon from '@mui/icons-material/RedoRounded';
@@ -15,10 +15,8 @@ import { selectCreateNewDialogState, selectCurrentFolderId } from '../../ducks/s
 import { setCreateNewDialogState } from '../../ducks/slice/uiSlice';
 
 type Props = {
-  showFolderSidebar: boolean,
-  showNotesSidebar: boolean,
-  onCloseFolder: Function,
-  onCloseNotes: Function,
+  folderWidth: number,
+  resetFolderSidebarWidth: () => void,
 }
 
 type StyledGroupButtonProps = {
@@ -36,6 +34,7 @@ const StyledGroupButton = ({ name, Icon, handleFormatSelection }: StyledGroupBut
 }
 
 const ToolBarSection = (props: Props) => {
+  
 
   const selectedFolderId = useSelector(selectCurrentFolderId);
   const createNewDialogState = useSelector(selectCreateNewDialogState);
@@ -62,21 +61,19 @@ const ToolBarSection = (props: Props) => {
 
   return (
     <Grid container className={styles.toolbarSection}>
-      <Grid size={{ md: 1 }} display="flex" alignItems="center">
+      <Grid size={{ md: 1 }}>
+        {
+          props.folderWidth === 0 && (
+            <IconButton onClick={() => props.resetFolderSidebarWidth()}>
+              <MenuIcon fontSize="small" />
+            </IconButton>
+          )
+        }
         <IconButton
           onClick={handleCreateNewNote}
         >
           <NoteAddIcon fontSize="small" />
         </IconButton>
-      </Grid>
-      <Grid size={{ md: 1 }}>
-        {
-          !props.showFolderSidebar && (
-            <IconButton onClick={() => props.onCloseFolder()}>
-              <MenuIcon fontSize="small" />
-            </IconButton>
-          )
-        }
       </Grid>
       <Grid size={{ md: 10 }} display="flex" alignItems="center" justifyContent="flex-end">
         <ButtonGroup

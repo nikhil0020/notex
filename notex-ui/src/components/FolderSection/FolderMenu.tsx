@@ -1,5 +1,5 @@
 import { Menu, MenuItem, Paper } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Add } from '@mui/icons-material'
 import { setCreateNewDialogState } from '../../ducks/slice/uiSlice'

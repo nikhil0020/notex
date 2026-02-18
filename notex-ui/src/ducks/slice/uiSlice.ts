@@ -15,21 +15,14 @@ interface CreateNewDialogState {
 interface UIState {
   currentFolderId: string | null
   currentNoteId: string | null
-  selectedTool: ToolType 
-  isFolderSidebarOpen: boolean
-  isNotesSidebarOpen: boolean
-  newFolderCount: number,
+  selectedTool: ToolType
   folderDialogState: CreateNewDialogState,
-  newFolderName: string,
 }
 
 const initialState: UIState = {
   currentFolderId: "all-notes",
   currentNoteId: null,
   selectedTool: "text",
-  isFolderSidebarOpen: true,
-  isNotesSidebarOpen: true,
-  newFolderCount: 0,
   folderDialogState: {
     open: false,
     title: "",
@@ -37,7 +30,6 @@ const initialState: UIState = {
     type: null,
     parentId: null
   },
-  newFolderName: "New Folder"
 }
 
 const uiSlice = createSlice({
@@ -57,21 +49,9 @@ const uiSlice = createSlice({
       state.selectedTool = action.payload
     },
 
-    toggleFolderSidebar(state) {
-      state.isFolderSidebarOpen = !state.isFolderSidebarOpen
-    },
-
-    toggleNotesSidebar(state) {
-      state.isNotesSidebarOpen = !state.isNotesSidebarOpen
-    },
-
     setCreateNewDialogState(state, action: PayloadAction<CreateNewDialogState>) {
       state.folderDialogState = action.payload
     },
-
-    setNewFolderName(state, action: PayloadAction<string>) {
-      state.newFolderName = action.payload;
-    }
   }
 });
 
@@ -79,10 +59,7 @@ export const {
   setCurrentFolder,
   setCurrentNote,
   setSelectedTool,
-  toggleFolderSidebar,
-  toggleNotesSidebar,
   setCreateNewDialogState,
-  setNewFolderName,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

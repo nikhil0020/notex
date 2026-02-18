@@ -34,18 +34,23 @@ export type FileSystemNode = FolderNode | NoteNode;
 
 const adapter = createEntityAdapter<FileSystemNode>();
 
-const notesFolder: FolderNode = {
-  id: "notes",
-  name: "Notes",
+const createDefaultFolder = (name: string, id: string): FolderNode => ({
+  id,
+  name,
   type: "folder",
   parentId: null,
   folderChildrenIds: [],
   noteChildrenIds: [],
-  createdAt: Date.now().toString(),
-}
+  createdAt: new Date().toISOString(),
+});
 
 let initialState = adapter.getInitialState();
-initialState = adapter.addOne(initialState, notesFolder)
+initialState = adapter.addMany(initialState, [
+  createDefaultFolder("All Notes", "all-notes"),
+  createDefaultFolder("Favorites", "favorites"),
+  createDefaultFolder("Notes", "notes"),
+]
+);
 
 const fileSystemSlice = createSlice({
   name: "fileSystem",
@@ -103,6 +108,13 @@ const fileSystemSlice = createSlice({
       }
     },
 
+    changeNodeName(state, action: PayloadAction<{ id: string, newName: string}>) {
+      const node = state.entities[action.payload.id];
+      if (node) {
+        node.name = action.payload.newName;
+      }
+    },
+
     toggleFavorite(state, action: PayloadAction<string>) {
       const note = state.entities[action.payload];
 
@@ -151,11 +163,7 @@ export const {
   restoreFromTrash,
   permanentlyDelete,
   addBlockToNote,
+  changeNodeName,
 } = fileSystemSlice.actions;
 
 export default fileSystemSlice.reducer;
-
-
-
-
-

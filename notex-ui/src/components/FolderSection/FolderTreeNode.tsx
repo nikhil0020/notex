@@ -93,24 +93,34 @@ const FolderTreeNode = ({
           >
             {folder.name}
           </Typography>
-          <IconButton
+          <Box
             onClick={(e) => {
-              e.stopPropagation()
-              setAnchorEl(e.currentTarget)
+              e.preventDefault();
+              e.stopPropagation();
             }}
+            sx={{ display: 'flex', alignItems: 'center' }}
           >
-            <MoreHorizIcon
-              sx={{
-                fontSize: "15px",
-                color: isSelected ? "white" : "black"
+            <IconButton
+              tabIndex={-1}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setAnchorEl(e.currentTarget)
               }}
+            >
+              <MoreHorizIcon
+                sx={{
+                  fontSize: "15px",
+                  color: isSelected ? "white" : "black"
+                }}
+              />
+            </IconButton>
+            <FolderMenu
+              folderId={folder.id}
+              anchorEl={anchorEl}
+              setAnchorEl={setAnchorEl}
             />
-          </IconButton>
-          <FolderMenu
-            folderId={folder.id}
-            anchorEl={anchorEl}
-            setAnchorEl={setAnchorEl}
-          />
+          </Box>
         </Box>
       </Box>
       {

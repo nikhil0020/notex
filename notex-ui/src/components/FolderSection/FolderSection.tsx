@@ -70,23 +70,6 @@ const FolderSection = (props: Props) => {
 
   return (
     <Box className={styles.folderSection}>
-      <Typography variant="h6" component="h6"> Folders </Typography>
-      <Divider sx={{ my: 0.5}}/>
-      <DefaultFolderButtons
-        selectedFolder={selectedFolder}
-        onClick={() => handleButtonClick("all-notes")}
-        folderName="All Notes"
-        folderId='all-notes'
-        Icon={FolderOpenTwoToneIcon}
-      />
-      <DefaultFolderButtons
-        selectedFolder={selectedFolder}
-        onClick={() => handleButtonClick("favorites")}
-        folderName="Favorites"
-        folderId="favorites"
-        Icon={FolderSpecialTwoToneIcon}
-      />
-      <Divider sx={{ my: 0.5 }}/>
       {
         rootFolders && rootFolders.length > 0 && rootFolders.map((folder) => {
           return (

@@ -1,7 +1,7 @@
 .folderSection {
   border: 2px solid rgb(127, 126, 126);
   border-top: none;
-  height: calc(100vh - 60px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 5px 10px;

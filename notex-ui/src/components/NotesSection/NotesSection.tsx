@@ -33,10 +33,6 @@ const NotesSection = () => {
 
   return (
     <Box className={styles.noteSection}>
-      <Box>
-        <Typography variant="h6" component="h6"> Notes </Typography>
-      </Box>
-      <Divider sx={{ my: 0.5}}/>
       {notes && notes.length > 0 ? (
         notes.map((note: { id: string, name: string, parentId: string, isFavorite: boolean }) => (
           <NoteCard
