@@ -65,5 +65,7 @@ export const selectBlocksByNote = (noteId: string) => (state: RootState) => {
 
   if (!note || note.type !== "note") return [];
   
-  return note.blockIds.map((id) => state.blocks.entities[id]);
+  return note.blockIds
+    .map((id) => state.blocks.entities[id])
+    .filter((block): block is NonNullable<typeof block> => block !== undefined);
 }

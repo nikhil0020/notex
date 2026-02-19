@@ -4,8 +4,9 @@ import {
   nanoid,
   type PayloadAction,
 } from "@reduxjs/toolkit";
+import Delta from "quill-delta";
 
-type BlockType = "text" | "image" | "handwriting"
+export type BlockType = "text" | "image" | "handwriting"
 
 interface BaseBlock {
   id: string
@@ -16,7 +17,7 @@ interface BaseBlock {
 
 interface TextBlock extends BaseBlock {
   type: "text"
-  content: string
+  content: Delta
 }
 
 interface ImageBlock extends BaseBlock {
@@ -31,7 +32,7 @@ interface HandWritingBlock extends BaseBlock {
   strokes: Stroke[]
 }
 
-interface Stroke {
+export interface Stroke {
   color: string
   width: number
   points: {
@@ -41,7 +42,8 @@ interface Stroke {
   }[]
 }
 
-type Block = TextBlock | ImageBlock | HandWritingBlock;
+export type Block = TextBlock | ImageBlock | HandWritingBlock;
+export type { TextBlock, ImageBlock, HandWritingBlock };
 
 const adapter = createEntityAdapter<Block>();
 
@@ -59,7 +61,7 @@ const blocksSlice = createSlice({
             id: nanoid(),
             noteId,
             type: "text" as const,
-            content: "",
+            content: new Delta(),
             createdAt: new Date().toISOString(),
           }
         }
@@ -68,12 +70,12 @@ const blocksSlice = createSlice({
 
     updateTextBlock(
       state,
-      action: PayloadAction<{ id: string, content: string}>
+      action: PayloadAction<{ id: string, delta: Delta}>
     ) {
       adapter.updateOne(state, {
         id: action.payload.id,
         changes: {
-          content: action.payload.content
+          content: action.payload.delta,
         },
       })
     },
@@ -128,13 +130,13 @@ const blocksSlice = createSlice({
       reducer(state, action: PayloadAction<HandWritingBlock>) {
         adapter.addOne(state, action.payload)
       },
-      prepare(noteId: string, strokes: Stroke[]) {
+      prepare(noteId: string) {
         return {
           payload: {
             id: nanoid(),
             noteId,
             type: "handwriting" as const,
-            strokes,
+            strokes: [],
             createdAt: new Date().toISOString()
           }
         }

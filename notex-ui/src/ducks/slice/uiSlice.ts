@@ -2,6 +2,7 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
+import type { BlockType } from "./blocksSlice";
 
 type ToolType = "text" | "handwriting" | "image"
 
@@ -17,6 +18,11 @@ interface UIState {
   currentNoteId: string | null
   selectedTool: ToolType
   folderDialogState: CreateNewDialogState,
+  selectedBlock?: {
+    id: string,
+    type: BlockType | null
+  } 
+  focusedBlockId?: string | null
 }
 
 const initialState: UIState = {
@@ -30,6 +36,11 @@ const initialState: UIState = {
     type: null,
     parentId: null
   },
+  selectedBlock: {
+    id: "",
+    type: null
+  },
+  focusedBlockId: ""
 }
 
 const uiSlice = createSlice({
@@ -45,13 +56,21 @@ const uiSlice = createSlice({
       state.currentNoteId = action.payload
     },
 
-    setSelectedTool(state, action: PayloadAction<ToolType>) {
+    setSelectedTool(state, action: PayloadAction<BlockType>) {
       state.selectedTool = action.payload
     },
 
     setCreateNewDialogState(state, action: PayloadAction<CreateNewDialogState>) {
       state.folderDialogState = action.payload
     },
+
+    setSelectedBlock(state, action: PayloadAction<{ id: string, type: ToolType}> ) {
+      state.selectedBlock = action.payload;
+    },
+
+    setFocusedBlock(state, action: PayloadAction<string | null>) {
+      state.focusedBlockId = action.payload;
+    }
   }
 });
 
@@ -60,6 +79,8 @@ export const {
   setCurrentNote,
   setSelectedTool,
   setCreateNewDialogState,
+  setFocusedBlock,
+  setSelectedBlock,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
