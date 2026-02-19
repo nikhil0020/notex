@@ -1,6 +1,11 @@
 .noteEditorSection {
-  padding: 5px;
-  width: 100%;
+  padding: 16px;
+  width: calc(100% - 32px);
   height: calc(100vh - 60px);
-  overflow-y: scroll;
+  overflow-y: auto;
+  margin: 0 auto;
+}
+
+.block {
+  margin: 8px 0;
 }
