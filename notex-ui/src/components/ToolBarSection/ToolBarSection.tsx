@@ -4,13 +4,12 @@ import styles from './styles.module.css';
 import MenuIcon from '@mui/icons-material/Menu';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCreateNewDialogState, selectCurrentFolderId, selectCurrentNoteId, selectFocusedBlockId } from '../../ducks/selector/uiSelector';
-import { setCreateNewDialogState, setFocusedBlock, setSelectedTool } from '../../ducks/slice/uiSlice';
+import { selectCreateNewDialogState, selectCurrentFolderId, selectCurrentNoteId } from '../../ducks/selector/uiSelector';
+import { setCreateNewDialogState, setSelectedTool } from '../../ducks/slice/uiSlice';
 import Toolbar from '../NoteEditorSection/Toolbar';
-import { getEditor } from '../NoteEditorSection/EditorRegistry';
 import { NotebookPen, Type } from 'lucide-react';
-import { addBlockToNote } from '../../ducks/slice/fileSystemSlice';
-import { addTextBlock, type BlockType } from '../../ducks/slice/blocksSlice';
+import type { BlockType } from '../../ducks/slice/blocksSlice';
+import { useActiveEditor } from '../NoteEditorSection/useActiveEditor';
 
 type Props = {
   folderWidth: number,
@@ -20,10 +19,9 @@ type Props = {
 const ToolBarSection = (props: Props) => {
   const selectedFolderId = useSelector(selectCurrentFolderId);
   const createNewDialogState = useSelector(selectCreateNewDialogState);
-  const focusedBlockId = useSelector(selectFocusedBlockId);
   const selectedNoteId = useSelector(selectCurrentNoteId);
 
-  const editor = focusedBlockId ? getEditor(focusedBlockId) : null;
+  const editor = useActiveEditor();
   
   const dispatch = useDispatch();
 
@@ -40,25 +38,6 @@ const ToolBarSection = (props: Props) => {
       value: createNewDialogState.value
     }))
   }
-
-  // const handleAddNewBlock = (type: BlockType) => {
-  //     if (!selectedNoteId) return;
-
-  //     if (type === "text") {
-  //       const textBlockAction = addTextBlock(selectedNoteId);
-  //       dispatch(textBlockAction);
-  //       dispatch(addBlockToNote({
-  //         noteId: selectedNoteId,
-  //         blockId: textBlockAction.payload.id,
-  //       }));
-
-  //       dispatch(setFocusedBlock(textBlockAction.payload.id));
-  //     }
-
-  //     if (type === "draw") {
-  //       // TODO
-  //     }
-  // }
 
   const handleToolChange = (type: BlockType) => {
     dispatch(setSelectedTool(type));
@@ -92,7 +71,7 @@ const ToolBarSection = (props: Props) => {
           )
         }
       </Grid>
-      <Grid size={{ md: 9 }} display="flex" alignItems="center" justifyContent="flex-end">
+      <Grid  size={{ md: 9 }} display="flex" alignItems="center" justifyContent="flex-end">
         <Toolbar editor={editor || null} />
       </Grid>
     </Grid>

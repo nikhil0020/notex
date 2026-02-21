@@ -13,6 +13,7 @@ import {
   AlignRight,
 } from "lucide-react";
 import './EditorStyles.css';
+import { useEffect, useState } from "react";
 
 type Props = {
   editor: Editor | null;
@@ -28,7 +29,10 @@ const Button = ({
   children: React.ReactNode;
 }) => (
   <button
-    onClick={onClick}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick();
+    }}
     className={`toolbar-btn ${active ? "active" : ""}`}
   >
     {children}
@@ -36,8 +40,26 @@ const Button = ({
 );
 
 export default function Toolbar({ editor }: Props) {
-  if (!editor) return null;
+  const [, forceUpdate] = useState(0);
+  
+  useEffect(() => {
+    if (!editor) return;
+    
+    const update = () => {
+      forceUpdate(v => v + 1);
+    };
+    
+    editor.on("selectionUpdate", update);
+    editor.on("transaction", update);
+    
+    return () => {
+      editor.off("selectionUpdate", update);
+      editor.off("transaction", update);
+    };
+  }, [editor]);
 
+  if (!editor) return null;
+  
   return (
     <div className="toolbar">
       <Button

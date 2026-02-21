@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EditorContent, useEditor } from '@tiptap/react'
 import { editorExtensions } from './extensions'
 import { setFocusedBlock, setSelectedTool } from '../../ducks/slice/uiSlice'
-import { registerEditor, unregisterEditor } from './EditorRegistry'
 import { selectFocusedBlockId } from '../../ducks/selector/uiSelector'
+import { activeEditorManager } from './ActiveEditorManager'
 
 type Props = {
   block: TextBlock
@@ -23,6 +23,7 @@ function TextBlockEditor({ block }: Props) {
     onFocus: () => {
       dispatch(setSelectedTool("text"));
       dispatch(setFocusedBlock(block.id));
+      activeEditorManager.set(editor, block.id);
     },
 
     onUpdate: ({ editor }) => {
@@ -35,8 +36,6 @@ function TextBlockEditor({ block }: Props) {
 
   useEffect(() => {
     if(!editor) return;
-
-    registerEditor(block.id, editor);
 
     // if nothing focused → focus this block
     if (!focusedBlockId) {
@@ -52,7 +51,9 @@ function TextBlockEditor({ block }: Props) {
     }
 
     return () => {
-      unregisterEditor(block.id);
+      if (activeEditorManager.getBlockId() === block.id) {
+        activeEditorManager.set(null, null);
+      }
     }
 
   }, [editor, focusedBlockId]);

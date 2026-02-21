@@ -22,7 +22,7 @@ interface UIState {
     id: string,
     type: BlockType | null
   } 
-  focusedBlockId?: string | null
+  focusedBlockId?: string | null,
 }
 
 const initialState: UIState = {
@@ -40,7 +40,7 @@ const initialState: UIState = {
     id: "",
     type: null
   },
-  focusedBlockId: ""
+  focusedBlockId: "",
 }
 
 const uiSlice = createSlice({
@@ -70,7 +70,7 @@ const uiSlice = createSlice({
 
     setFocusedBlock(state, action: PayloadAction<string | null>) {
       state.focusedBlockId = action.payload;
-    }
+    },
   }
 });
 

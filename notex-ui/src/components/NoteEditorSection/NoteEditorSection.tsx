@@ -88,18 +88,21 @@ const NoteEditorSection = (props: Props) => {
   return (
     <Box className={styles.noteEditorSection}>
       {
-        selectedNote && selectedNote.blockIds.map((blockId, index) => {
+        selectedNote && selectedNote.blockIds.map((blockId) => {
           return <BlockRenderer
                     key={blockId}
                     blockId={blockId}
-                    isLastBlock={index === selectedNote.blockIds.length - 1}
                   />
         })
       }
-      <div
-        className={styles.blockSpacer}
-        onClick={() => createTextBlockBelow()}
-      />
+      {
+        selectedNote && selectedNote.blocks[selectedNote.blocks.length - 1]?.type !== "text" && (
+          <div
+            className={styles.blockSpacer}
+            onClick={() => createTextBlockBelow()}
+          />
+        )
+      }
     </Box>
   )
 }

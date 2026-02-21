@@ -9,10 +9,17 @@
   line-height: 1.5rem;
 }
 
-.ProseMirror h1,
-.ProseMirror h2,
+.ProseMirror h1 {
+  margin: 0;
+  line-height: 2.5rem;
+}
+.ProseMirror h2 {
+  margin: 0;
+  line-height: 2.25rem;
+}
 .ProseMirror p,
 .ProseMirror ul,
 .ProseMirror ol {
   margin: 0;
 }
+

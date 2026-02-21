@@ -5,10 +5,9 @@ import TextBlockEditor from './TextBlockEditor';
 
 type Props = {
   blockId: string,
-  isLastBlock: boolean,
 }
 
-function BlockRenderer({ blockId, isLastBlock }: Props) {
+function BlockRenderer({ blockId }: Props) {
 
   const block = useSelector(selectBlockById(blockId));
 
