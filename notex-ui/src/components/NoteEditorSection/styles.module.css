@@ -1,6 +1,16 @@
 .noteEditorSection {
   padding: 5px;
-  width: 100%;
+  width: 97%;
   height: calc(100vh - 60px);
   overflow-y: scroll;
+}
+
+.blockSpacer {
+  height: 24px;          /* VERY IMPORTANT */
+  cursor: text;
+  width: 100%;
+}
+
+.blockSpacer:hover {
+  background: rgba(0,0,0,0.03);
 }

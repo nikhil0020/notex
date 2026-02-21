@@ -1,0 +1,35 @@
+.editor-wrapper {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: white;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.toolbar-btn {
+  border: none;
+  background: transparent;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.toolbar-btn:hover {
+  background: #ececec;
+}
+
+.toolbar-btn.active {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.editor-content {
+  padding: 16px;
+  min-height: 300px;
+}
+
+.ProseMirror {
+  outline: none;
+}

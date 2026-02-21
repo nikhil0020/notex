@@ -31,7 +31,10 @@ export const selectFolderById = (folderId: string) => (state: RootState) => {
 export const selectNoteById = (noteId: string) => (state: RootState) => {
   const node = state.fileSystem.entities[noteId];
   if (node?.type === "note") {
-    return node;
+    return {
+      ...node,
+      blocks: node.blockIds.map(blockId => state.blocks.entities[blockId]).filter((block): block is NonNullable<typeof block> => block !== undefined)
+    }
   }
   return null;
 }

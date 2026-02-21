@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCurrentNoteId } from '../../ducks/selector/uiSelector'
+import { selectCurrentNoteId, selectSelectedTool } from '../../ducks/selector/uiSelector'
 import { selectNoteById } from '../../ducks/selector/fileSystemSelector'
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import styles from './styles.module.css';
-import { changeNodeName } from '../../ducks/slice/fileSystemSlice'
+import { addBlockToNote } from '../../ducks/slice/fileSystemSlice'
+import BlockRenderer from './BlockRenderer'
+import { addHandwritingBlock, addTextBlock } from '../../ducks/slice/blocksSlice'
+import { setFocusedBlock } from '../../ducks/slice/uiSlice'
 
 type Props = {}
 
@@ -12,38 +15,91 @@ const NoteEditorSection = (props: Props) => {
 
   const selectedNoteId = useSelector(selectCurrentNoteId);
   const selectedNote = useSelector(selectNoteById(selectedNoteId || ''));
-  const [name, setName] = useState(selectedNote ? selectedNote.name : '');
+  const selectedTool = useSelector(selectSelectedTool);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setName(selectedNote ? selectedNote.name : '');
+    if (!selectedNoteId || !selectedNote) return;
+
+    // only react when DRAW selected
+    if (selectedTool !== "draw") return;
+
+    const lastBlock = selectedNote.blocks.length > 0 ? selectedNote.blocks[selectedNote.blocks.length - 1] : null;
+
+    // avoid creating multiple draw blocks
+    if (lastBlock?.type === "draw") return;
+
+    // create drawing block
+    const action = addHandwritingBlock(selectedNoteId);
+    dispatch(action);
+
+    dispatch(
+      addBlockToNote({
+        noteId: selectedNoteId,
+        blockId: action.payload.id,
+      })
+    );
+
+    dispatch(setFocusedBlock(action.payload.id));
+  }, [selectedTool]);
+
+  useEffect(() => {
+    if (!selectedNote) return;
+
+    if (selectedNote.blockIds.length === 0) {
+      const action = addTextBlock(selectedNote.id);
+      dispatch(action);
+
+      dispatch(addBlockToNote({
+        noteId: selectedNote.id,
+        blockId: action.payload.id,
+      }));
+
+      dispatch(setFocusedBlock(action.payload.id));
+    }
   }, [selectedNoteId, selectedNote]);
 
-  const handleInput = (e: any) => {
-    setName(e.currentTarget.textContent || '');
-  };
+  const createTextBlockBelow = () => {
+    if (!selectedNoteId || !selectedNote) return;
 
-  const handleBlur = () => {
-    if (selectedNote && name !== selectedNote.name) {
-      dispatch(changeNodeName({
-        id: selectedNoteId || '',
-        newName: name
-      }));
+    const blockIds = selectedNote.blockIds;
+    const index = blockIds.length - 1;
+    if (index === -1) return;
+
+    const lastBlock = selectedNote.blocks[index];
+
+    if (lastBlock?.type === "text" && lastBlock.content === "") {
+      dispatch(setFocusedBlock(lastBlock.id));
+      return;
     }
+
+    const action = addTextBlock(selectedNoteId);
+    dispatch(action);
+    
+    const newBlockId = action.payload.id;
+    
+    dispatch(addBlockToNote({
+      noteId: selectedNoteId,
+      blockId: newBlockId,
+    }));
   };
 
   return (
     <Box className={styles.noteEditorSection}>
-      <Typography
-        contentEditable={!!selectedNote}
-        onInput={handleInput}
-        onBlur={handleBlur}
-        variant="h6"
-        component="h1"
-      >
-        {selectedNote ? selectedNote.name : 'Select a note to view or edit'}
-      </Typography>
+      {
+        selectedNote && selectedNote.blockIds.map((blockId, index) => {
+          return <BlockRenderer
+                    key={blockId}
+                    blockId={blockId}
+                    isLastBlock={index === selectedNote.blockIds.length - 1}
+                  />
+        })
+      }
+      <div
+        className={styles.blockSpacer}
+        onClick={() => createTextBlockBelow()}
+      />
     </Box>
   )
 }

@@ -4,7 +4,7 @@ import {
 } from "@reduxjs/toolkit";
 import type { BlockType } from "./blocksSlice";
 
-type ToolType = "text" | "handwriting" | "image"
+type ToolType = "text" | "draw"
 
 interface CreateNewDialogState {
   open: boolean,

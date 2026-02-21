@@ -4,9 +4,8 @@ import {
   nanoid,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import Delta from "quill-delta";
 
-export type BlockType = "text" | "image" | "handwriting"
+export type BlockType = "text" | "draw"
 
 interface BaseBlock {
   id: string
@@ -17,18 +16,11 @@ interface BaseBlock {
 
 interface TextBlock extends BaseBlock {
   type: "text"
-  content: Delta
+  content: string,
 }
 
-interface ImageBlock extends BaseBlock {
-  type: "image"
-  url: string
-  width: number
-  height: number
-}
-
-interface HandWritingBlock extends BaseBlock {
-  type: "handwriting"
+interface DrawingBlock extends BaseBlock {
+  type: "draw"
   strokes: Stroke[]
 }
 
@@ -42,8 +34,8 @@ export interface Stroke {
   }[]
 }
 
-export type Block = TextBlock | ImageBlock | HandWritingBlock;
-export type { TextBlock, ImageBlock, HandWritingBlock };
+export type Block = TextBlock  | DrawingBlock;
+export type { TextBlock, DrawingBlock };
 
 const adapter = createEntityAdapter<Block>();
 
@@ -61,7 +53,7 @@ const blocksSlice = createSlice({
             id: nanoid(),
             noteId,
             type: "text" as const,
-            content: new Delta(),
+            content: "",
             createdAt: new Date().toISOString(),
           }
         }
@@ -70,12 +62,12 @@ const blocksSlice = createSlice({
 
     updateTextBlock(
       state,
-      action: PayloadAction<{ id: string, delta: Delta}>
+      action: PayloadAction<{ id: string, content: string }>
     ) {
       adapter.updateOne(state, {
         id: action.payload.id,
         changes: {
-          content: action.payload.delta,
+          content: action.payload.content,
         },
       })
     },
@@ -87,38 +79,6 @@ const blocksSlice = createSlice({
       adapter.removeOne(state, action.payload);
     },
 
-    addImageBlock: {
-      reducer(state, action: PayloadAction<ImageBlock>) {
-        adapter.addOne(state, action.payload)
-      },
-      prepare(noteId: string, url: string, width: number, height: number) {
-        return {
-          payload: {
-            id: nanoid(),
-            noteId,
-            type: "image" as const,
-            url,
-            width,
-            height,
-            createdAt: new Date().toISOString(),
-          }
-        }
-      }
-    },
-
-    updateImageBlock(
-      state,
-      action: PayloadAction<{ id: string, width: number, height: number }>
-    ) {
-      adapter.updateOne(state, {
-        id: action.payload.id,
-        changes: {
-          width: action.payload.width,
-          height: action.payload.height,
-        },
-      })
-    },
-
     deleteImageBlock(
       state,
       action: PayloadAction<string>
@@ -127,7 +87,7 @@ const blocksSlice = createSlice({
     },
 
     addHandwritingBlock: {
-      reducer(state, action: PayloadAction<HandWritingBlock>) {
+      reducer(state, action: PayloadAction<DrawingBlock>) {
         adapter.addOne(state, action.payload)
       },
       prepare(noteId: string) {
@@ -135,7 +95,7 @@ const blocksSlice = createSlice({
           payload: {
             id: nanoid(),
             noteId,
-            type: "handwriting" as const,
+            type: "draw" as const,
             strokes: [],
             createdAt: new Date().toISOString()
           }
@@ -150,7 +110,7 @@ const blocksSlice = createSlice({
       adapter.updateOne(state, {
         id: action.payload.id,
         changes: {
-          strokes: [...(state.entities[action.payload.id] as HandWritingBlock)?.strokes || [], action.payload.stroke]
+          strokes: [...(state.entities[action.payload.id] as DrawingBlock)?.strokes || [], action.payload.stroke]
         },
       })
     },
@@ -166,10 +126,8 @@ const blocksSlice = createSlice({
 
 export const {
   addTextBlock,
-  addImageBlock,
   addHandwritingBlock,
   updateTextBlock,
-  updateImageBlock,
   updateHandwritingBlock,
   deleteTextBlock,
   deleteImageBlock,
